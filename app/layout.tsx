@@ -6,6 +6,7 @@ import { SessionProvider } from "next-auth/react";
 import { ToastProvider } from "@/components/shared/Toast";
 import SessionWatcher from "@/components/shared/SessionWatcher";
 import Navbar from "@/components/shared/Navbar";
+import WalletStatusBar from "@/components/shared/WalletStatusBar";
 import Footer from "@/components/shared/Footer";
 import { usePathname } from "next/navigation";
 
@@ -25,8 +26,9 @@ export default function RootLayout({
         <SessionProvider>
           <ToastProvider>
             <SessionWatcher>
+              <WalletStatusBar />
               {!isDashboard && <Navbar />}
-              <main className={!isDashboard ? "pt-20" : ""}>
+              <main className={!isDashboard ? "pt-12" : ""}>
                 <div className="blob blob-violet" />
                 <div className="blob blob-indigo" />
                 <div className="blob blob-fuchsia" />

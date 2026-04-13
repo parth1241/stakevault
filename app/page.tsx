@@ -3,10 +3,12 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Wallet, Shield, TrendingUp, Lock, Zap, ArrowRight, CheckCircle2, ChevronDown } from 'lucide-react';
+import TransactionSuccessCard from '@/components/shared/TransactionSuccessCard';
 import YieldCalculator from '@/components/shared/YieldCalculator';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 export default function LandingPage() {
+  const [showMockSuccess, setShowMockSuccess] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [headlineIndex, setHeadlineIndex] = useState(0);
   const headlines = [
@@ -26,6 +28,21 @@ export default function LandingPage() {
 
   return (
     <div className="relative overflow-hidden">
+      {showMockSuccess && (
+        <TransactionSuccessCard 
+          title="Staking Successful" 
+          subtitle="Your 500 XLM have been locked for 90 days."
+          txHash="4e1d7a3b8c9f2e1d0a5b6c7d8e9f0a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q"
+          amount="500.00"
+          walletAddress="GDRW6YRRXCOZBB6KTMXNUP2S5ST6G4R5AARBDWCBVQ"
+          walletBalance="1240.50"
+          extraDetails={[
+            { label: "Lock Period", value: "90 Days" },
+            { label: "Estimated APY", value: "12%" }
+          ]}
+          onClose={() => setShowMockSuccess(false)}
+        />
+      )}
       {/* Canvas Particle Background - Custom Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center pt-20">
         <HeroCanvas />
@@ -35,7 +52,7 @@ export default function LandingPage() {
             <span className="text-xs font-bold text-primary tracking-widest uppercase">Powered by Soroban Smart Contracts</span>
           </div>
           
-          <h1 className="text-5xl md:text-8xl font-black mb-6 tracking-tighter leading-tight transition-all duration-500">
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black mb-6 tracking-tighter leading-tight transition-all duration-500 italic">
             <span className="gradient-text block mb-2">{headlines[headlineIndex]}</span>
           </h1>
           

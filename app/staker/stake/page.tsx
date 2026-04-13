@@ -14,6 +14,7 @@ import Confetti from '@/components/shared/Confetti';
 import { getWalletBalance } from '@/lib/stellar';
 import { stakeXLM } from '@/lib/soroban';
 import { useToast } from '@/components/shared/Toast';
+import TransactionSuccessCard from '@/components/shared/TransactionSuccessCard';
 import { cn } from '@/lib/utils';
 
 export default function StakePage() {
@@ -28,6 +29,9 @@ export default function StakePage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
+  const [showSuccessCard, setShowSuccessCard] = useState(false);
+  const [lastTxHash, setLastTxHash] = useState("");
+  const [updatedBalance, setUpdatedBalance] = useState("0.00");
 
   const apyRates = { 7: 0.03, 30: 0.07, 90: 0.12 };
   const currentApy = apyRates[days as keyof typeof apyRates];
@@ -76,10 +80,18 @@ export default function StakePage() {
       });
 
       if (res.ok) {
+        setLastTxHash(txHash);
+        
+        // Fetch fresh balance
+        try {
+          const bal = await getWalletBalance(session.user.linkedWallet);
+          setUpdatedBalance(bal.toFixed(2));
+        } catch (e) {}
+
         setSuccess(true);
+        setShowSuccessCard(true);
         setStatusMessage('Position confirmed!');
         toast("XLM Staked Successfully!", "success");
-        setTimeout(() => router.push('/staker/positions'), 3000);
       } else {
         const data = await res.json();
         throw new Error(data.error || "Failed to record stake");
@@ -285,7 +297,28 @@ export default function StakePage() {
              </p>
           </div>
         </div>
+        </div>
       </div>
+
+      {showSuccessCard && (
+        <TransactionSuccessCard 
+          title="Staking Successful!"
+          subtitle="Your XLM has been securely locked in the Soroban smart contract."
+          txHash={lastTxHash}
+          amount={amount.toString()}
+          walletAddress={session?.user?.linkedWallet}
+          walletBalance={updatedBalance}
+          extraDetails={[
+            { label: "Lock Period", value: `${days} Days` },
+            { label: "Current APY", value: `${(currentApy * 100).toFixed(0)}%` },
+            { label: "Expected Yield", value: `${(amount * currentApy * (days/365)).toFixed(4)} XLM` }
+          ]}
+          onClose={() => {
+            setShowSuccessCard(false);
+            router.push('/staker/positions');
+          }}
+        />
+      )}
     </div>
   );
 }

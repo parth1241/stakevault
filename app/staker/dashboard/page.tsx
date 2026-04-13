@@ -14,6 +14,9 @@ import {
 import StakeCard from '@/components/shared/StakeCard';
 import YieldCalculator from '@/components/shared/YieldCalculator';
 import { DashboardSkeleton } from '@/components/shared/Skeleton';
+import WalletManager from '@/components/shared/WalletManager';
+import SendXLMPanel from '@/components/shared/SendXLMPanel';
+import { Activity } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -93,6 +96,33 @@ export default function StakerDashboard() {
           color="text-accent-cyan" 
           bgColor="bg-accent-cyan/10" 
         />
+      </div>
+
+      {/* Stellar Wallet Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-1">
+          <WalletManager />
+        </div>
+        <div className="lg:col-span-1">
+          <SendXLMPanel compact />
+        </div>
+        <div className="lg:col-span-1">
+          <div className="card-surface bg-high/5 hover:bg-high/10 p-8 flex flex-col items-center justify-center text-center space-y-5 h-full relative overflow-hidden group">
+             <div className="absolute inset-0 bg-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+             <div className="w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 shadow-xl shadow-violet-500/10 transition-transform group-hover:scale-110">
+                <Activity size={32} className="animate-pulse" />
+             </div>
+             <div>
+                <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] italic">Protocol Oracle</h3>
+                <p className="text-[10px] text-text-muted mt-2 font-bold uppercase tracking-widest leading-relaxed">Streaming Stellar Testnet Ledger Data<br/>Zero-Knowledge Proofs Active</p>
+             </div>
+             <div className="w-full h-px bg-white/5" />
+             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Node: Synchronized</span>
+             </div>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

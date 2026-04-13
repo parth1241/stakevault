@@ -1,19 +1,45 @@
 'use client';
 
+import React, { useEffect, useState } from 'react';
 import { useSession, signOut } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { 
   BarChart3, Shield, Users, Settings, 
-  LogOut, Wallet, ChevronRight, Activity
+  LogOut, Wallet, ChevronRight, Activity,
+  AlertTriangle, ShieldCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DashboardSkeleton } from "@/components/shared/Skeleton";
+import WalletStatusBar from '@/components/shared/WalletStatusBar';
+import Level1StatusBadge from '@/components/shared/Level1StatusBadge';
+import { Networks } from '@stellar/stellar-sdk';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
+  const [wrongNetwork, setWrongNetwork] = useState(false);
+
+  useEffect(() => {
+    async function checkNetwork() {
+      if (typeof window === 'undefined') return
+      try {
+        const { getNetworkDetails } = await import('@stellar/freighter-api')
+        const details = await getNetworkDetails()
+        if (details.networkPassphrase !== Networks.TESTNET) {
+          setWrongNetwork(true)
+        } else {
+          setWrongNetwork(false)
+        }
+      } catch {
+        // Freighter not installed
+      }
+    }
+    checkNetwork()
+    const interval = setInterval(checkNetwork, 10000)
+    return () => clearInterval(interval)
+  }, [])
 
   if (status === "loading") return <DashboardSkeleton />;
   if (!session || session.user.role !== "admin") {
@@ -30,7 +56,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="flex min-h-screen bg-background text-text-primary">
+    <div className="flex min-h-screen bg-background text-text-primary overflow-hidden relative">
       {/* Sidebar */}
       <aside className="w-64 bg-[#0d0022] border-r border-indigo-500/10 flex flex-col fixed inset-y-0 z-50">
         <div className="p-8">
@@ -85,25 +111,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
               <div className="flex-1 overflow-hidden">
                 <p className="text-sm font-bold truncate">{session.user.name}</p>
-                <p className="text-[10px] text-text-muted truncate">Admin Privileges</p>
+                <p className="text-[10px] text-text-muted truncate uppercase font-bold tracking-widest">SysAdmin Root</p>
               </div>
             </div>
             <button
               onClick={() => signOut()}
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-high hover:bg-high/80 text-text-secondary hover:text-accent-rose transition-colors text-xs font-bold"
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-high hover:bg-high/80 text-text-secondary hover:text-accent-rose transition-colors text-xs font-bold uppercase tracking-widest border border-transparent hover:border-accent-rose/20"
             >
-              <LogOut size={14} /> Sign Out
+              <LogOut size={14} /> Purge Session
             </button>
           </div>
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 pl-64">
-        <div className="min-h-screen py-10 px-10 relative">
-          {children}
-        </div>
-      </main>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 pl-64">
+        {wrongNetwork && (
+          <div className="w-full bg-rose-600 text-white py-2 px-4 flex items-center justify-center gap-2 z-[100] animate-in slide-in-from-top duration-300">
+            <AlertTriangle className="h-4 w-4" />
+            <span className="text-xs font-bold uppercase tracking-wider text-center">
+              Wrong Network: Switch Freighter to Stellar Testnet to use StakeVault
+            </span>
+          </div>
+        )}
+        <WalletStatusBar />
+        <main className="flex-1 min-h-screen py-10 px-10 relative overflow-y-auto">
+           <div className="absolute inset-0 bg-dot-grid opacity-20 pointer-events-none" />
+           {children}
+        </main>
+      </div>
+      <Level1StatusBadge />
     </div>
   );
 }

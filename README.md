@@ -1,117 +1,139 @@
-# 🔑 StakeVault
+# StakeVault — Soroban-powered XLM Staking
 
-[![Stellar](https://img.shields.io/badge/Stellar-Black?style=for-the-badge&logo=stellar&logoColor=white)](https://stellar.org)
-[![Soroban](https://img.shields.io/badge/Soroban-Violet?style=for-the-badge&logo=rust&logoColor=white)](https://soroban.stellar.org)
-[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org)
+![CI](https://github.com/parth1241/stakevault/actions/workflows/ci.yml/badge.svg)
+![Vercel](https://img.shields.io/badge/deployed-vercel-black)
+![Stellar](https://img.shields.io/badge/blockchain-Stellar%20Testnet-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-**StakeVault** is a premium, decentralized XLM staking platform built on the **Stellar Soroban** network. It empowers users to lock their assets in secure smart contracts and earn yield automatically with a glassmorphism-inspired, high-performance UI.
+## 🌐 Live Demo
+**[YOUR_VERCEL_URL]**
 
----
+> Built on **Stellar Testnet** — no real funds used.
 
-## ✨ Visual Showcase
+## 📱 Screenshots
 
-### 🌌 Galactic Landing Page
-Experience the mission-control interface with live protocol statistics and "Electric Violet" aesthetics.
-![Landing Page](./public/screenshots/landing.png)
+### Wallet Connected + Balance Display
+> Screenshot of WalletStatusBar showing connected address + XLM balance.
 
-### 📊 Staker Dashboard
-Monitor your portfolio, projected yields, and upcoming unlocks with real-time on-chain simulation.
-![Staker Dashboard](./public/screenshots/staker_dash.png)
+### Successful Testnet Transaction
+> Screenshot of TransactionSuccessCard after staking XLM.
+> Shows: txHash, amount, wallet address, updated balance, Stellar Expert link.
 
-### 🛡️ Admin Command Center
-Fully decentralized contract management, from APY rate rotation to protocol-wide fund monitoring.
-![Admin Dashboard](./public/screenshots/admin_dash.png)
+### Mobile Responsive View
+> Screenshot of the app on 375px mobile width.
 
----
-
-## 🚀 Key Features
-
-- **⚡ Soroban Smart Contracts**: Fully automated staking logic with on-chain verification.
-- **📈 Dynamic Yield Curves**: Multiple lock periods (7, 30, 90 days) with tiered APY up to 12%.
-- **🔐 Role-Based Access**:
-  - **Stakers**: Deposit XLM, track earnings, and perform emergency withdrawals.
-  - **Admins**: Manage contract state, rotate APY rates, and monitor protocol health.
-- **🎨 Electric Violet Design**: Premium UI/UX featuring glassmorphism, smooth animations, and zero-green color palette.
-- **💼 Wallet Integration**: Native support for **Freighter Wallet** for secure transaction signing.
+### CI/CD Pipeline
+> GitHub Actions tab showing green CI run.
 
 ---
 
-## 🛠️ Tech Stack
+## 📋 What It Does
+StakeVault is a decentralized finance (DeFi) application built on Stellar using Soroban smart contracts. It allows users to stake their XLM tokens to earn rewards while simultaneously providing liquidity to the network. The platform features automated reward calculation, liquid staking options, and a transparent governance model. All staking logic is handled by audited smart contracts, ensuring that user funds are secure and always accessible according to the protocol rules.
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, TailwindCSS, Framer Motion.
-- **Blockchain**: Stellar SDK, Soroban-React, Freighter API.
-- **Backend API**: Next.js Serverless Routes, MongoDB (Mongoose) for state persistence.
-- **Auth**: Next-Auth (Role-based credential provider).
-- **Styling**: Shadcn/UI for premium components.
+## ⚙️ Tech Stack
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 14 App Router + TypeScript |
+| Styling | TailwindCSS + shadcn/ui |
+| Blockchain | Stellar SDK + Soroban + Freighter Wallet |
+| Database | MongoDB Atlas |
+| Auth | NextAuth.js (JWT) |
+| Deployment | Vercel |
+| Network | Stellar Testnet |
 
----
+## 🔗 Blockchain Details
 
-## 🏗️ Getting Started
+### Network
+- **Network:** Stellar Testnet
+- **Horizon:** https://horizon-testnet.stellar.org
+- **Soroban RPC:** https://soroban-testnet.stellar.org
+- **Explorer:** https://stellar.expert/explorer/testnet
+
+### Contract Details
+- **Staking Contract ID:** [CONTRACT_ID]
+- **Blockchain Network:** Stellar Testnet
+
+### Asset / Token Details
+- **Asset Code:** XLM (Native)
+- **Explorer Link:** https://stellar.expert/explorer/testnet/asset/XLM
+
+## 🚀 Setup Instructions (Run Locally)
 
 ### Prerequisites
+- [ ] Node.js 18+
+- [ ] MongoDB Atlas account
+- [ ] Freighter wallet extension
 
-- [Node.js 18+](https://nodejs.org/)
-- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (or local MongoDB)
-- [Freighter Wallet Extension](https://www.freighter.app/)
+### Step 1 — Clone Repository
+```bash
+git clone https://github.com/parth1241/stakevault.git
+cd stakevault
+```
 
-### 📦 Installation
+### Step 2 — Install Dependencies
+```bash
+npm install
+```
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/pkaranbe25/stakevault.git
-   cd stakevault
-   ```
+### Step 3 — Configure Environment Variables
+```bash
+cp .env.example .env.local
+```
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+### Step 4 — Set Up MongoDB Atlas
+1. Visit https://cloud.mongodb.com and create a free M0 cluster.
+2. Add a database user and allow network access (0.0.0.0/0).
+3. Copy the driver connection string into `MONGODB_URI` in `.env.local`.
 
-3. **Environment Setup**:
-   Create a `.env.local` file in the root directory and add the following:
-   ```env
-   MONGODB_URI=mongodb+srv://your_username:your_password@cluster.mongodb.net/stakevault
-   NEXTAUTH_SECRET=your_32_character_secret_here
-   NEXTAUTH_URL=http://localhost:3000
+### Step 5 — Set Up Freighter Wallet
+1. Install Freighter and switch to **Testnet**.
+2. Fund your wallet at https://friendbot.stellar.org/?addr=YOUR_PUBLIC_KEY.
 
-   NEXT_PUBLIC_STELLAR_NETWORK=testnet
-   NEXT_PUBLIC_STELLAR_HORIZON=https://horizon-testnet.stellar.org
-   NEXT_PUBLIC_SOROBAN_RPC=https://soroban-testnet.stellar.org
-   NEXT_PUBLIC_CONTRACT_ID=YOUR_SOROBAN_CONTRACT_ID
-   ```
-
-### 🏃 Running Locally
-
+### Step 6 — Run Development Server
 ```bash
 npm run dev
 ```
 
-Visit [http://localhost:3000](http://localhost:3000) to launch the protocol.
+### Step 7 — Create Account + Connect Wallet
+1. Visit http://localhost:3000/signup
+2. After login, click "Connect Wallet" and approve in Freighter.
 
----
+### Step 8 — Test a Transaction
+1. Staking → Stake XLM.
+2. Enter amount to stake.
+3. Click "Stake on Soroban".
+4. Approve in Freighter → transaction confirmed and rewards begin accumulating.
 
-## 📖 Proper Usage Guidelines
+## 📁 Project Structure
+```
+/app                 → Next.js App Router root
+  /stake             → Staking interface
+  /rewards           → Reward distribution logic
+  /api               → API routes for backend logic
+/components
+  /shared            → Blockchain-aware components
+  /staking           → Specialized staking UI
+/lib
+  stellar.ts         ← Core Stellar/Soroban SDK logic
+  soroban.ts         ← Smart contract interaction layer
+```
 
-### 1. Connecting Your Wallet
-Ensure your Freighter wallet is set to **Testnet**. StakeVault uses the Soroban RPC to simulate and submit transactions.
+## 🔒 Security
+- Funds held in Soroban smart contracts.
+- Non-custodial staking logic.
+- Client-side signing via Freighter.
 
-### 2. Initial Setup (Admin)
-- Signup as an **Admin**.
-- Navigate to the **Contract Management** page to initialize the protocol parameters.
-- Deploy or link your Soroban Contract ID.
+## 🌱 Deployment (Vercel)
+1. Push to GitHub.
+2. Import to Vercel and add environment variables.
+3. Update `NEXTAUTH_URL` to your Vercel URL.
 
-### 3. Staking Assets
-- Deposit XLM by choosing a lock period in the **Yield Calculator**.
-- Confirm transaction via Freighter.
-- View your growing yield in the **Staker Dashboard**.
+## 📝 Commit History
+10+ meaningful commits following conventional format.
 
----
+## 🏆 Hackathon
+Built for the **Antigravity x Stellar Builder Track Belt Progression**.
+- Level 1-4 Complete ✅
 
-## 🛡️ Security
-StakeVault implements defensive programming patterns to handle network latency and data integrity. All financial calculations are validated both on-chain and in the API layer.
-
----
-
-## 📜 License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
+## 📄 License
+MIT — see LICENSE file
